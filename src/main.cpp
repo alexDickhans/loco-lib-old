@@ -78,6 +78,11 @@ void opcontrol() {
 	pros::Motor left_mtr(1);
 	pros::Motor right_mtr(2);
 
+	auto orientationSource = Loco::OrientationSource();
+	auto posePredictor = Loco::PosePredictor(Eigen::Vector3d(), orientationSource);
+
+	auto particleFilter = Loco::ParticleFilter<100>(orientationSource, posePredictor);
+
 	while (true) {
 		pros::lcd::print(0, "%d %d %d", (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
 		                 (pros::lcd::read_buttons() & LCD_BTN_CENTER) >> 1,
@@ -87,6 +92,10 @@ void opcontrol() {
 
 		left_mtr = left;
 		right_mtr = right;
+
+		Loco::Particle randomParticle = particleFilter.getRandomParticle();
+
+		printf("%f, %f, %f", randomParticle.getState().x(), randomParticle.getState().y(), randomParticle.getState().z());
 
 		pros::delay(20);
 	}
