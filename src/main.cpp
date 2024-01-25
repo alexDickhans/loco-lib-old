@@ -75,28 +75,31 @@ void autonomous() {}
  */
 void opcontrol() {
 	pros::Controller master(pros::E_CONTROLLER_MASTER);
-	pros::Motor left_mtr(1);
-	pros::Motor right_mtr(2);
+	pros::Imu imu(16);
 
-	auto orientationSource = Loco::OrientationSource();
+	imu.reset(true);
+
+	auto orientationSource = Loco::InertialOrientationSource(imu);
 	auto posePredictor = Loco::PosePredictor(Eigen::Vector3d(), orientationSource);
 
 	auto particleFilter = Loco::ParticleFilter<100>(orientationSource, posePredictor);
+	particleFilter.initializeNormal(Eigen::Vector2d(), Eigen::Matrix2d::Identity() * 0.1);
+
+	auto telemetryRadio = PT::TelemetryRadio(1, new PT::PassThroughEncoding());
 
 	while (true) {
 		pros::lcd::print(0, "%d %d %d", (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
 		                 (pros::lcd::read_buttons() & LCD_BTN_CENTER) >> 1,
 		                 (pros::lcd::read_buttons() & LCD_BTN_RIGHT) >> 0);
-		int left = master.get_analog(ANALOG_LEFT_Y);
-		int right = master.get_analog(ANALOG_RIGHT_Y);
-
-		left_mtr = left;
-		right_mtr = right;
 
 		Loco::Particle randomParticle = particleFilter.getRandomParticle();
 
-		printf("%f, %f, %f", randomParticle.getState().x(), randomParticle.getState().y(), randomParticle.getState().z());
+		telemetryRadio.transmit("[" + std::to_string(static_cast<int>((randomParticle.getState().x() * 350.0 / 1.8 + 350))) +"," + std::to_string(
+				static_cast<int>((randomParticle.getState().y() * 350.0 / 1.8 + 350))) + "]\n");
 
-		pros::delay(20);
+		printf("%s\n", ("[" + std::to_string(static_cast<int>((randomParticle.getState().x() * 350.0 / 1.8 + 350))) +"," + std::to_string(
+				static_cast<int>((randomParticle.getState().y() * 350.0 / 1.8 + 350))) + "]\n").c_str());
+
+		pros::delay(10);
 	}
 }

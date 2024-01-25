@@ -36,6 +36,8 @@
 
 #include "api.h"
 #include "locolib/locolib.hpp"
+#include "telemetryRadio/telemetryRadio.hpp"
+
 /**
  * You should add more #includes here
  */
