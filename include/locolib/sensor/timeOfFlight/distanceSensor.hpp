@@ -17,7 +17,13 @@ namespace Loco {
 		}
 
 		QLength getReading() override {
-			return distance.get() * 1_mm;
+			auto value = distance.get();
+
+			if (value == 9999) {
+				return std::numeric_limits<double>::quiet_NaN();
+			}
+
+			return value * 1_mm;
 		}
 
 		QLength getStd() override {

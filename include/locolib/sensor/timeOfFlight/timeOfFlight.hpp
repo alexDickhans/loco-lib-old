@@ -11,6 +11,8 @@ namespace Loco {
 	private:
 		FieldModel& model;
 		QLength maxLength;
+		Eigen::Vector2d sensorPosition;
+		Angle sensorAngle;
 	public:
 		TimeOfFlight() = delete;
 		TimeOfFlight(FieldModel& model, QLength maxLength) : model(model) {
@@ -26,12 +28,14 @@ namespace Loco {
 		}
 
 		QLength getPredictedReading(const Particle &particle) {
-
+			model.getDistance(particle);
 		}
 
 		double confidence(const Loco::Particle &particle) final {
 			QLength predictedReading = this->getPredictedReading(particle);
 			QLength actualReading = this->getReading();
+
+			return Qsq(predictedReading - actualReading).getValue();
 		}
 	};
 }

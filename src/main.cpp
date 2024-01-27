@@ -77,6 +77,10 @@ void opcontrol() {
 	pros::Controller master(pros::E_CONTROLLER_MASTER);
 	pros::Imu imu(16);
 
+	pros::ADIUltrasonic ultrasonic('a', 'b');
+	pros::Distance distance(2);
+	pros::ADILineSensor lineSensor('c');
+
 	imu.reset(true);
 
 	auto orientationSource = Loco::InertialOrientationSource(imu);
@@ -88,17 +92,17 @@ void opcontrol() {
 	auto telemetryRadio = PT::TelemetryRadio(1, new PT::PassThroughEncoding());
 
 	while (true) {
-		pros::lcd::print(0, "%d %d %d", (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
-		                 (pros::lcd::read_buttons() & LCD_BTN_CENTER) >> 1,
-		                 (pros::lcd::read_buttons() & LCD_BTN_RIGHT) >> 0);
+		pros::lcd::print(0, "Line sensor reading: %d", lineSensor.get_value());
 
 		Loco::Particle randomParticle = particleFilter.getRandomParticle();
 
 		telemetryRadio.transmit("[" + std::to_string(static_cast<int>((randomParticle.getState().x() * 350.0 / 1.8 + 350))) +"," + std::to_string(
 				static_cast<int>((randomParticle.getState().y() * 350.0 / 1.8 + 350))) + "]\n");
 
-		printf("%s\n", ("[" + std::to_string(static_cast<int>((randomParticle.getState().x() * 350.0 / 1.8 + 350))) +"," + std::to_string(
-				static_cast<int>((randomParticle.getState().y() * 350.0 / 1.8 + 350))) + "]\n").c_str());
+//		printf("%s\n", ("[" + std::to_string(static_cast<int>((randomParticle.getState().x() * 350.0 / 1.8 + 350))) +"," + std::to_string(
+//				static_cast<int>((randomParticle.getState().y() * 350.0 / 1.8 + 350))) + "]\n").c_str());
+
+		std::cout << "Distance: " << (ultrasonic.get_value() * 1_mm).Convert(inch) << ", " << (distance.get() * 1_mm).Convert(inch) << std::endl;
 
 		pros::delay(10);
 	}
