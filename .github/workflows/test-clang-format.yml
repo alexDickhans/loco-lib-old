@@ -15,6 +15,6 @@ jobs:
     - uses: actions/checkout@v2
     - uses: DoozyX/clang-format-lint-action@v0.14
       with:
-        source: './src/lemlib ./include/lemlib'
+        source: './src/locolib ./include/locolib'
         extensions: 'hpp,cpp'
         clangFormatVersion: 14

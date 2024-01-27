@@ -19,7 +19,7 @@ jobs:
           if [ $ACTION = opened ]; then
               # we have to get the head sha directly from the pr api, because github silly ig
               echo "then"
-              sha=$(wget -O- --quiet https://api.github.com/repos/LemLib/LemLib/pulls/$PR_NUM | jq -r .head.sha | head -c 6)
+              sha=$(wget -O- --quiet https://api.github.com/repos/locolib/locolib/pulls/$PR_NUM | jq -r .head.sha | head -c 6)
           else
               echo "else"
               sha=$(echo $SHA | head -c 6)
@@ -86,20 +86,20 @@ jobs:
       - name: Build PROS Project
         run: make clean quick -j
 
-      - name: Create LemLib template
+      - name: Create Loco-lib template
         run: pros make template
 
       - name: Create template folder
-        run: mkdir -p template/include/lemlib/
+        run: mkdir -p template/include/locolib/
         
       - name: Copy LICENSE and README.md into template
-        run: cp {LICENSE,README.md} template/include/lemlib/  
+        run: cp {LICENSE,README.md} template/include/locolib/  
         
       - name: Append GitHub link to README.md
-        run: echo "\n## [Github link](${{github.server_url}}/${{github.repository}})" >> template/include/lemlib/README.md
+        run: echo "\n## [Github link](${{github.server_url}}/${{github.repository}})" >> template/include/locolib/README.md
 
       - name: Fix relative Github links in README.md
-        run: perl -i -pe 's@(?<=[^/])(docs/assets/.*?)(?=[")])@${{github.server_url}}/${{github.repository}}/blob/master/$1?raw=true@g' template/include/lemlib/README.md
+        run: perl -i -pe 's@(?<=[^/])(docs/assets/.*?)(?=[")])@${{github.server_url}}/${{github.repository}}/blob/master/$1?raw=true@g' template/include/locolib/README.md
 
       - name: Unzip Template
         uses: montudor/action-zip@v1.0.0
@@ -107,7 +107,7 @@ jobs:
           args: unzip "${{steps.template-name.outputs.name}}.zip" -d template
         
       - name: Create VERSION file
-        run: echo $POSTFIX > template/include/lemlib/VERSION
+        run: echo $POSTFIX > template/include/locolib/VERSION
         env:
           POSTFIX: ${{ steps.template-postfix.outputs.postfix }}
 
