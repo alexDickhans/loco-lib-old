@@ -1,6 +1,7 @@
 #pragma once
 
 #include "locolib/localization/particleFilter/particle.hpp"
+#include <limits>
 
 namespace Loco {
 
@@ -9,7 +10,7 @@ namespace Loco {
 
 	public:
 		QLength getDistance(const Particle& particle) {
-			return std::nullopt;
+			return std::numeric_limits<double>::quiet_NaN();
 		}
 
 		static Eigen::Vector2d minPosition;
