@@ -8,7 +8,7 @@ namespace Loco {
 	class FieldModel {
 
 	public:
-		std::optional<QLength> getDistance(const Particle& particle) {
+		QLength getDistance(const Particle& particle) {
 			return std::nullopt;
 		}
 
