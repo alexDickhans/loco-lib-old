@@ -17,8 +17,11 @@ reliable measurement.
 
 ## Laundry list
 
-- [ ] Create abstract odometry class
-- [ ] Create kalman filter
-- [ ] Integrate GPS
-- [ ] Add distance sensor
+- [X] Create abstract deadwheel odometry class
+- [ ] Implement 2/3 wheel odometry
+- [ ] Implement drift drive odometry
+- [X] Create particle filter
+- [ ] Integrate distance sensor
+- [ ] Integrate GPS sensor
+- [ ] Kalman filter for orientation
 - [ ] Keep good documentation
