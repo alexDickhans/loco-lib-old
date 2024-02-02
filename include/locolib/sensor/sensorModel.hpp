@@ -15,7 +15,7 @@ namespace Loco {
 		}
 
 		virtual double getWeight() {
-			return 0.0;
+			return sensorWeight;
 		}
 	};
 }

@@ -28,7 +28,7 @@ namespace Loco {
 		}
 
 		QLength getPredictedReading(const Particle &particle) {
-			return model.getDistance(particle);
+			return model.getDistanceToObstacle(particle);
 		}
 
 		double confidence(const Loco::Particle &particle) final {

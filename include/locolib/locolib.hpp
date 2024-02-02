@@ -16,3 +16,4 @@
 #include "utils/statUtils.hpp"
 #include "prediction/orientationSource/inertialOrientationSource.hpp"
 #include "prediction/orientationSource/gpsOrientationSource.hpp"
+#include "sensor/gps/gps.hpp"

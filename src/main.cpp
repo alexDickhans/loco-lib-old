@@ -80,6 +80,7 @@ void opcontrol() {
 	pros::ADIUltrasonic ultrasonic('a', 'b');
 	pros::Distance distance(2);
 	pros::ADILineSensor lineSensor('c');
+	pros::Gps gps(4);
 
 	imu.reset(true);
 
@@ -91,19 +92,26 @@ void opcontrol() {
 
 	auto telemetryRadio = PT::TelemetryRadio(1, new PT::PassThroughEncoding());
 
+	auto fieldModel = Loco::FieldModel({{Eigen::Vector2d(-1.8, -1.8), Eigen::Vector2d(-1.8, 1.8)}, {Eigen::Vector2d(-1.8, 1.8), Eigen::Vector2d(1.8, 1.8)}, {Eigen::Vector2d(1.8, 1.8), Eigen::Vector2d(1.8, -1.8)}, {Eigen::Vector2d(1.8, -1.8), Eigen::Vector2d(-1.8, -1.8)}});
+
 	while (true) {
-		pros::lcd::print(0, "Line sensor reading: %d", lineSensor.get_value());
 
 		Loco::Particle randomParticle = particleFilter.getRandomParticle();
 
-		telemetryRadio.transmit("[" + std::to_string(static_cast<int>((randomParticle.getState().x() * 350.0 / 1.8 + 350))) +"," + std::to_string(
-				static_cast<int>((randomParticle.getState().y() * 350.0 / 1.8 + 350))) + "]\n");
+		auto gpsStatus = gps.get_status();
+
+		pros::lcd::print(1, "GPS : %f", gps.get_error());
+
+
+//		telemetryRadio.transmit("[" + std::to_string(static_cast<int>((randomParticle.getState().x() * 350.0 / 1.8 + 350))) +"," + std::to_string(
+//				static_cast<int>((randomParticle.getState().y() * 350.0 / 1.8 + 350))) + "]\n");
 
 //		printf("%s\n", ("[" + std::to_string(static_cast<int>((randomParticle.getState().x() * 350.0 / 1.8 + 350))) +"," + std::to_string(
 //				static_cast<int>((randomParticle.getState().y() * 350.0 / 1.8 + 350))) + "]\n").c_str());
 
-		std::cout << "Distance: " << (ultrasonic.get_value() * 1_mm).Convert(inch) << ", " << (distance.get() * 1_mm).Convert(inch) << std::endl;
+		std::cout << "Distance: " << fieldModel.getDistanceToObstacle(Loco::Particle(Eigen::Vector3d(gpsStatus.y, gpsStatus.x, -gpsStatus.yaw * degree.Convert(radian)))).Convert(inch) << ", " << (distance.get() * 1_mm).Convert(inch) << std::endl;
 
+		pros::lcd::print(0, "Model: %f, Reading: %f", fieldModel.getDistanceToObstacle(Loco::Particle(Eigen::Vector3d(gpsStatus.y, gpsStatus.x, -gpsStatus.yaw * degree.Convert(radian)))).Convert(inch), (distance.get() * 1_mm).Convert(inch));
 		pros::delay(10);
 	}
 }
