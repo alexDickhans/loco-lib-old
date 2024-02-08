@@ -16,6 +16,8 @@ namespace Loco {
 
 		}
 
+        void configure() {}
+
 		QLength getReading() override {
 			auto value = distance.get();
 

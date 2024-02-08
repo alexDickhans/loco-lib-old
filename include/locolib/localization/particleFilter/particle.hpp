@@ -1,6 +1,9 @@
 #pragma once
 
+#include <utility>
+
 #include "Eigen/Dense"
+#include "pros/gps.hpp"
 
 namespace Loco {
 	class Particle {
@@ -10,10 +13,10 @@ namespace Loco {
 	public:
 		Particle() = default;
 		Particle(Eigen::Vector3d state, double weight = 1.0) {
-			this->state = state;
+			this->state = std::move(state);
 			this->weight = weight;
 		}
-
+        Particle(pros::c::gps_status_s gpsStatus);
 		Particle(Eigen::Vector2d state, Angle angle, double weight = 1.0) {
 			this->state = Eigen::Vector3d(state.x(), state.y(), angle.getValue());
 			this->weight = weight;

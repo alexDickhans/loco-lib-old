@@ -7,8 +7,6 @@ namespace Loco {
 	private:
 		QLength lastReading;
 		QLength delta;
-
-		QLength radius;
 	protected:
 		void updateReadingDistance(QLength const newReading) {
 			delta = newReading - lastReading;
@@ -18,6 +16,8 @@ namespace Loco {
 		void updateReading(Angle angle) {
 			updateReadingDistance(angle.getValue() * radius.getValue());
 		}
+
+		QLength radius;
 	public:
 		DeadWheel() = delete;
 		explicit DeadWheel(QLength radius) :
@@ -35,6 +35,10 @@ namespace Loco {
 
 		QLength getDelta() const {
 			return delta;
+		}
+
+		virtual QLength getTickLength() const {
+			return 0.0;
 		}
 	};
 }

@@ -3,8 +3,8 @@
 #include <vector>
 #include "particle.hpp"
 #include <random>
-#include "locolib/prediction/posePredictor.hpp"
 #include "locolib/units/units.hpp"
+#include "locolib/prediction/deadWheel/twoWheelOdometry.hpp"
 
 namespace Loco {
 	template<uint32_t size>
@@ -17,12 +17,12 @@ namespace Loco {
 		std::normal_distribution<double> startingNormal{0.0, 1.0};
 		std::uniform_real_distribution<double> startingUniform;
 		OrientationSource& orientationSource;
-		PosePredictor& posePredictor;
+		TwoWheelOdometry& posePredictor;
 		Particle bestParticle;
 		std::vector<SensorModel*> sensors{};
 		double totalWeight = 0.0;
 	public:
-		ParticleFilter(OrientationSource& orientationSource, PosePredictor& posePredictor) : orientationSource(orientationSource), posePredictor(posePredictor) {
+		ParticleFilter(OrientationSource& orientationSource, TwoWheelOdometry& posePredictor) : orientationSource(orientationSource), posePredictor(posePredictor) {
 			this->initializeUniform(FieldModel::minPosition, FieldModel::maxPosition);
 		}
 
@@ -42,10 +42,16 @@ namespace Loco {
 			}
 		}
 
-		void initializeNormal(Eigen::Vector2d startingPosition, Eigen::Matrix2d covariance, Eigen::Vector2d lowerBound = FieldModel::minPosition, Eigen::Vector2d upperBound = FieldModel::maxPosition) {
+		void initializeNormal(const Eigen::Vector2d& startingPosition, const Eigen::Matrix2d& covariance, Eigen::Vector2d lowerBound = FieldModel::minPosition, Eigen::Vector2d upperBound = FieldModel::maxPosition) {
 			for (size_t i = 0; i < size; i++) {
 				particles.at(i) = Particle(startingPosition + (covariance * Eigen::Vector2d(startingNormal(generator), startingNormal(generator))), orientationSource.getAngle());
 				particles.at(i).clamp(lowerBound, upperBound);
+			}
+		}
+
+		void initializeSpot(const Eigen::Vector3d& startingPosition) {
+			for (auto &particle: particles) {
+				particle = startingPosition;
 			}
 		}
 
@@ -59,9 +65,9 @@ namespace Loco {
 			this->setOrientation(orientationSource.getAngle());
 		}
 
-		void moveParticles(Eigen::Vector3d translation, Eigen::Matrix3d covariance) {
+		void moveParticles(const std::function<Eigen::Vector3d(void)>& translationFunction) {
 			for (auto &item: particles) {
-				item.setState(item.getState() + translation + Eigen::Vector3d::Random() * covariance);
+				item.setState(item.getState() + translationFunction());
 			}
 		}
 
@@ -117,13 +123,14 @@ namespace Loco {
 		void update() {
 			QTime timeDelta = 20_ms;
 
+			posePredictor.update();
+
 			this->setOrientation();
 
-			auto odomPoseDelta = posePredictor.getDeltaAtTimeDelta(timeDelta);
+			this->moveParticles([&] () -> Eigen::Vector3d {return posePredictor.predictDelta();});
 
-			this->moveParticles(odomPoseDelta, Eigen::Matrix<double, 3, 3>({{odomPoseDelta.x(), 0.0, 0.0}, {0.0, odomPoseDelta.y(), 0.0}, {0.0, 0.0, 0.0}}));
-
-
+			if (sensors.empty())
+				return;
 
 			this->weightParticles();
 

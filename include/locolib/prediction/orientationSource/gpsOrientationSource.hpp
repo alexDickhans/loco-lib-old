@@ -12,7 +12,7 @@ namespace Loco {
 		}
 
 		Angle getAngle() override {
-			return this->gps.get_rotation() * 1_deg;
+			return -this->gps.get_rotation() * 1_deg;
 		}
 	};
 }

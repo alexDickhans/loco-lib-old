@@ -13,7 +13,7 @@ namespace Loco {
 		}
 
 		Angle getAngle() override {
-			return imu.get_rotation() * 1_deg;
+			return -imu.get_rotation() * 1_deg;
 		}
 	};
 }

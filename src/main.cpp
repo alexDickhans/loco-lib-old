@@ -1,5 +1,23 @@
 #include "main.h"
 
+pros::Controller master(pros::E_CONTROLLER_MASTER);
+pros::Imu imu(16);
+
+pros::ADIUltrasonic ultrasonic('a', 'b');
+pros::Distance distance(2);
+pros::ADILineSensor lineSensor('c');
+pros::Rotation verticalRotation = {5};
+Loco::RotationDeadWheel verticalWheel = {verticalRotation, 1.325_in};
+auto horizontalWheel = Loco::DeadWheel(1.0_in);
+
+
+auto orientationSource = Loco::InertialOrientationSource(imu);
+auto posePredictor = Loco::TwoWheelOdometry(horizontalWheel, verticalWheel, orientationSource);
+
+auto particleFilter = Loco::ParticleFilter<100>(orientationSource, posePredictor);
+
+auto telemetryRadio = PT::TelemetryRadio(1, new PT::PassThroughEncoding());
+
 /**
  * A callback function for LLEMU's center button.
  *
@@ -7,13 +25,8 @@
  * "I was pressed!" and nothing.
  */
 void on_center_button() {
-	static bool pressed = false;
-	pressed = !pressed;
-	if (pressed) {
-		pros::lcd::set_text(2, "I was pressed!");
-	} else {
-		pros::lcd::clear_line(2);
-	}
+
+	particleFilter.initializeSpot(Eigen::Vector3d());
 }
 
 /**
@@ -74,35 +87,25 @@ void autonomous() {}
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	pros::Controller master(pros::E_CONTROLLER_MASTER);
-	pros::Imu imu(16);
-
-	pros::ADIUltrasonic ultrasonic('a', 'b');
-	pros::Distance distance(2);
-	pros::ADILineSensor lineSensor('c');
 
 	imu.reset(true);
-
-	auto orientationSource = Loco::InertialOrientationSource(imu);
-	auto posePredictor = Loco::PosePredictor(Eigen::Vector3d(), orientationSource);
-
-	auto particleFilter = Loco::ParticleFilter<100>(orientationSource, posePredictor);
-	particleFilter.initializeNormal(Eigen::Vector2d(), Eigen::Matrix2d::Identity() * 0.1);
-
-	auto telemetryRadio = PT::TelemetryRadio(1, new PT::PassThroughEncoding());
+	particleFilter.initializeSpot(Eigen::Vector3d());
 
 	while (true) {
 		pros::lcd::print(0, "Line sensor reading: %d", lineSensor.get_value());
 
+		particleFilter.update();
+
 		Loco::Particle randomParticle = particleFilter.getRandomParticle();
 
-		telemetryRadio.transmit("[" + std::to_string(static_cast<int>((randomParticle.getState().x() * 350.0 / 1.8 + 350))) +"," + std::to_string(
-				static_cast<int>((randomParticle.getState().y() * 350.0 / 1.8 + 350))) + "]\n");
+		telemetryRadio.transmit("[" + std::to_string(static_cast<int>((randomParticle.getState().y() * -350.0 / 1.8 + 350))) +"," + std::to_string(
+				static_cast<int>((randomParticle.getState().x() * 350.0 / 1.8 + 350))) + "]\n");
 
 //		printf("%s\n", ("[" + std::to_string(static_cast<int>((randomParticle.getState().x() * 350.0 / 1.8 + 350))) +"," + std::to_string(
 //				static_cast<int>((randomParticle.getState().y() * 350.0 / 1.8 + 350))) + "]\n").c_str());
 
-		std::cout << "Distance: " << (ultrasonic.get_value() * 1_mm).Convert(inch) << ", " << (distance.get() * 1_mm).Convert(inch) << std::endl;
+		std::cout << "[" + std::to_string(static_cast<int>((randomParticle.getState().y() * -350.0 / 1.8 + 350))) +"," + std::to_string(
+				static_cast<int>((randomParticle.getState().x() * 350.0 / 1.8 + 350))) + "]\n" << std::endl;
 
 		pros::delay(10);
 	}
