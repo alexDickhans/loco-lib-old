@@ -17,3 +17,4 @@
 #include "prediction/orientationSource/gpsOrientationSource.hpp"
 #include "prediction/deadWheel/twoWheelOdometry.hpp"
 #include "sensor/lineSensor/lineSensor.hpp"
+#include "sensor/lineSensor/adiLineSensor.hpp"

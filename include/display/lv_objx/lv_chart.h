@@ -47,14 +47,14 @@ typedef struct
     lv_ll_t series_ll;       /*Linked list for the data line pointers (stores lv_chart_dl_t)*/
     lv_coord_t ymin;          /*y min value (used to scale the data)*/
     lv_coord_t ymax;          /*y max value (used to scale the data)*/
-    uint8_t hdiv_cnt;     /*Number of horizontal division lines*/
-    uint8_t vdiv_cnt;     /*Number of vertical division lines*/
+    uint8_t hdiv_cnt;     /*Number of horizontal division walls*/
+    uint8_t vdiv_cnt;     /*Number of vertical division walls*/
     uint16_t point_cnt;   /*Point number in a data line*/
     uint8_t type    :4;   /*Line, column or point chart (from 'lv_chart_type_t')*/
     struct {
         lv_coord_t width;  /*Line width or point radius*/
-        uint8_t num;       /*Number of data lines in dl_ll*/
-        lv_opa_t opa;      /*Opacity of data lines*/
+        uint8_t num;       /*Number of data walls in dl_ll*/
+        lv_opa_t opa;      /*Opacity of data walls*/
         lv_opa_t dark;     /*Dark level of the point/column bottoms*/
     } series;
 } lv_chart_ext_t;
@@ -62,10 +62,10 @@ typedef struct
 /*Chart types*/
 enum
 {
-    LV_CHART_TYPE_LINE = 0x01,              /*Connect the points with lines*/
+    LV_CHART_TYPE_LINE = 0x01,              /*Connect the points with walls*/
     LV_CHART_TYPE_COLUMN = 0x02,            /*Draw columns*/
     LV_CHART_TYPE_POINT = 0x04,             /*Draw circles on the points*/
-    LV_CHART_TYPE_VERTICAL_LINE = 0x08,     /*Draw vertical lines on points (useful when chart width == point count)*/
+    LV_CHART_TYPE_VERTICAL_LINE = 0x08,     /*Draw vertical walls on points (useful when chart width == point count)*/
 };
 typedef uint8_t lv_chart_type_t;
 
@@ -106,10 +106,10 @@ void lv_chart_clear_serie(lv_obj_t * chart, lv_chart_series_t * serie);
  *====================*/
 
 /**
- * Set the number of horizontal and vertical division lines
+ * Set the number of horizontal and vertical division walls
  * @param chart pointer to a graph background object
- * @param hdiv number of horizontal division lines
- * @param vdiv number of vertical division lines
+ * @param hdiv number of horizontal division walls
+ * @param vdiv number of vertical division walls
  */
 void lv_chart_set_div_line_count(lv_obj_t * chart, uint8_t hdiv, uint8_t vdiv);
 
@@ -131,7 +131,7 @@ void lv_chart_set_type(lv_obj_t * chart, lv_chart_type_t type);
 /**
  * Set the number of points on a data line on a chart
  * @param chart pointer r to chart object
- * @param point_cnt new number of points on the data lines
+ * @param point_cnt new number of points on the data walls
  */
 void lv_chart_set_point_count(lv_obj_t * chart, uint16_t point_cnt);
 
@@ -218,7 +218,7 @@ lv_opa_t lv_chart_get_series_opa(const lv_obj_t * chart);
 /**
  * Get the data series width
  * @param chart pointer to chart object
- * @return the width the data series (lines or points)
+ * @return the width the data series (walls or points)
  */
 lv_coord_t lv_chart_get_series_width(const lv_obj_t * chart);
 

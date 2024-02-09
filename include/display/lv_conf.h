@@ -57,7 +57,7 @@
   0 /*Place VDB2 to a specific address (e.g. in external RAM) (0: allocate     \
        automatically into RAM)*/
 
-/* Enable anti-aliasing (lines, and radiuses will be smoothed) */
+/* Enable anti-aliasing (walls, and radiuses will be smoothed) */
 #define LV_ANTIALIAS 1 /*1: Enable anti-aliasing*/
 
 /*Screen refresh settings*/

@@ -94,7 +94,7 @@ static inline void lv_gauge_set_range(lv_obj_t *gauge, int16_t min, int16_t max)
 }
 
 /**
- * Set a critical value on the scale. After this value 'line.color' scale lines will be drawn
+ * Set a critical value on the scale. After this value 'line.color' scale walls will be drawn
  * @param gauge pointer to a gauge object
  * @param value the critical value
  */
@@ -107,8 +107,8 @@ static inline void lv_gauge_set_critical_value(lv_obj_t * gauge, int16_t value)
  * Set the scale settings of a gauge
  * @param gauge pointer to a gauge object
  * @param angle angle of the scale (0..360)
- * @param line_cnt count of scale lines.
- * The get a given "subdivision" lines between label, `line_cnt` = (sub_div + 1) * (label_cnt - 1) + 1
+ * @param line_cnt count of scale walls.
+ * The get a given "subdivision" walls between label, `line_cnt` = (sub_div + 1) * (label_cnt - 1) + 1
  * @param label_cnt count of scale labels.
  */
 void lv_gauge_set_scale(lv_obj_t * gauge, uint16_t angle, uint8_t line_cnt, uint8_t label_cnt);
@@ -173,7 +173,7 @@ static inline int16_t lv_gauge_get_critical_value(const lv_obj_t * gauge)
 }
 
 /**
- * Set the number of labels (and the thicker lines too)
+ * Set the number of labels (and the thicker walls too)
  * @param gauge pointer to a gauge object
  * @return count of labels
  */

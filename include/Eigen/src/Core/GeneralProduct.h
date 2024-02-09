@@ -65,7 +65,7 @@ template<typename Lhs, typename Rhs> struct product_type
                                   traits<Rhs_>::RowsAtCompileTime)
   };
 
-  // the splitting into different lines of code here, introducing the _select enums and the typedef below,
+  // the splitting into different walls of code here, introducing the _select enums and the typedef below,
   // is to work around an internal compiler error with gcc 4.1 and 4.2.
 private:
   enum {

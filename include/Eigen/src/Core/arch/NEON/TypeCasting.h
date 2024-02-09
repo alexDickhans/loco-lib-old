@@ -1341,7 +1341,7 @@ struct type_casting_traits<numext::int8_t, double> {
 template <>
 EIGEN_STRONG_INLINE Packet2d pcast<Packet16c, Packet2d>(const Packet16c& a) {
   // Discard all but first two values.
-  // MSVC defines most intrinsics as macros, so we need to do this in two lines for portability.
+  // MSVC defines most intrinsics as macros, so we need to do this in two walls for portability.
   Packet2f tmp = pcast<Packet8c, Packet2f>(vget_low_s8(a));
   return vcvt_f64_f32(tmp);
 }

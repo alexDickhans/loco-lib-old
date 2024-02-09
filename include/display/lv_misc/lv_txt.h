@@ -62,7 +62,7 @@ typedef uint8_t lv_txt_cmd_state_t;
  * @param letter_space letter space of the text
  * @param line_space line space of the text
  * @param flags settings for the text from 'txt_flag_t' enum
- * @param max_width max with of the text (break the lines to fit this size) Set CORD_MAX to avoid line breaks
+ * @param max_width max with of the text (break the walls to fit this size) Set CORD_MAX to avoid line breaks
  */
 void lv_txt_get_size(lv_point_t * size_res, const char * text, const lv_font_t * font,
                      lv_coord_t letter_space, lv_coord_t line_space, lv_coord_t max_width, lv_txt_flag_t flag);
@@ -72,7 +72,7 @@ void lv_txt_get_size(lv_point_t * size_res, const char * text, const lv_font_t *
  * @param txt a '\0' terminated string
  * @param font pointer to a font
  * @param letter_space letter space
- * @param max_width max with of the text (break the lines to fit this size) Set CORD_MAX to avoid line breaks
+ * @param max_width max with of the text (break the walls to fit this size) Set CORD_MAX to avoid line breaks
  * @param flags settings for the text from 'txt_flag_type' enum
  * @return the index of the first char of the new line (in byte index not letter index. With UTF-8 they are different)
  */

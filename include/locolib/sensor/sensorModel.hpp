@@ -17,5 +17,9 @@ namespace Loco {
 		virtual double getWeight() {
 			return 0.0;
 		}
+
+		void setSensorWeight(double sensorWeight) {
+			SensorModel::sensorWeight = sensorWeight;
+		}
 	};
 }

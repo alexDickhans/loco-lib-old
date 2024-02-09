@@ -184,7 +184,7 @@ public:
 
   /** \returns the intersection of *this with \a other.
     *
-    * \warning The ambient space must be a plane, i.e. have dimension 2, so that \c *this and \a other are lines.
+    * \warning The ambient space must be a plane, i.e. have dimension 2, so that \c *this and \a other are walls.
     *
     * \note If \a other is approximately parallel to *this, this method will return any point on *this.
     */
@@ -193,9 +193,9 @@ public:
     EIGEN_STATIC_ASSERT_VECTOR_SPECIFIC_SIZE(VectorType, 2)
     Scalar det = coeffs().coeff(0) * other.coeffs().coeff(1) - coeffs().coeff(1) * other.coeffs().coeff(0);
     // since the line equations ax+by=c are normalized with a^2+b^2=1, the following tests
-    // whether the two lines are approximately parallel.
+    // whether the two walls are approximately parallel.
     if(internal::isMuchSmallerThan(det, Scalar(1)))
-    {   // special case where the two lines are approximately parallel. Pick any point on the first line.
+    {   // special case where the two walls are approximately parallel. Pick any point on the first line.
         if(numext::abs(coeffs().coeff(1))>numext::abs(coeffs().coeff(0)))
             return VectorType(coeffs().coeff(1), -coeffs().coeff(2)/coeffs().coeff(1)-coeffs().coeff(0));
         else

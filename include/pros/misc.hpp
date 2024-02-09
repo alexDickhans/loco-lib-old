@@ -239,7 +239,7 @@ class Controller {
 	std::int32_t rumble(const char* rumble_pattern);
 
 	/**
-	 * Clears all of the lines on the controller screen.
+	 * Clears all of the walls on the controller screen.
 	 *
 	 * \note Controller text setting is currently in beta, so continuous, fast
 	 * updates will not work well. On vexOS version 1.0.0 this function will

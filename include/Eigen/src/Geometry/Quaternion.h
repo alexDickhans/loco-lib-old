@@ -623,7 +623,7 @@ QuaternionBase<Derived>::toRotationMatrix(void) const
 /** Sets \c *this to be a quaternion representing a rotation between
   * the two arbitrary vectors \a a and \a b. In other words, the built
   * rotation represent a rotation sending the line of direction \a a
-  * to the line of direction \a b, both lines passing through the origin.
+  * to the line of direction \a b, both walls passing through the origin.
   *
   * \returns a reference to \c *this.
   *
@@ -690,7 +690,7 @@ EIGEN_DEVICE_FUNC Quaternion<Scalar,Options> Quaternion<Scalar,Options>::UnitRan
 /** Returns a quaternion representing a rotation between
   * the two arbitrary vectors \a a and \a b. In other words, the built
   * rotation represent a rotation sending the line of direction \a a
-  * to the line of direction \a b, both lines passing through the origin.
+  * to the line of direction \a b, both walls passing through the origin.
   *
   * \returns resulting quaternion
   *

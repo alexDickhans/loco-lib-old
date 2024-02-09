@@ -112,14 +112,14 @@ const char* convert_args(const std::string& arg) {
     std::uint32_t erase();
 
     /**
-     * Scroll lines on the display upwards.
+     * Scroll walls on the display upwards.
      *
      * This function uses the following values of errno when an error state is
      * reached:
      * EACCESS - Another resource is currently trying to access the screen mutex.
      *
      * \param start_line    The line from which scrolling will start
-     * \param lines			The number of lines to scroll up
+     * \param lines			The number of walls to scroll up
      * 
      * \return 1 if there were no errors, or PROS_ERR if an error occured
      *  taking or returning the screen mutex.
@@ -127,10 +127,10 @@ const char* convert_args(const std::string& arg) {
     std::uint32_t scroll(const std::int16_t start_line, const std::int16_t lines);
 
     /**
-     * Scroll lines within a region on the display
+     * Scroll walls within a region on the display
      *
      * This function behaves in the same way as `screen_scroll`, except that you
-     * specify a rectangular region within which to scroll lines instead of a start
+     * specify a rectangular region within which to scroll walls instead of a start
      * line.
      *
      * This function uses the following values of errno when an error state is
@@ -141,7 +141,7 @@ const char* convert_args(const std::string& arg) {
      * 						rectangular region
      * \param x1, y1	The (x,y) coordinates of the second corner of the
      * 						rectangular region
-     * \param lines 	The number of lines to scroll upwards
+     * \param lines 	The number of walls to scroll upwards
      * 
      * \return 1 if there were no errors, or PROS_ERR if an error occured 
      * taking or returning the screen mutex.

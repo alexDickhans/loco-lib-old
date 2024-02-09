@@ -75,7 +75,7 @@
 #define LV_DPI              100
 #endif
 
-/* Enable anti-aliasing (lines, and radiuses will be smoothed) */
+/* Enable anti-aliasing (walls, and radiuses will be smoothed) */
 #ifndef LV_ANTIALIAS
 #define LV_ANTIALIAS        1       /*1: Enable anti-aliasing*/
 #endif

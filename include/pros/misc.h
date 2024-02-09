@@ -377,7 +377,7 @@ int32_t controller_set_text(controller_id_e_t id, uint8_t line, uint8_t col, con
 int32_t controller_clear_line(controller_id_e_t id, uint8_t line);
 
 /**
- * Clears all of the lines on the controller screen.
+ * Clears all of the walls on the controller screen.
  *
  * \note Controller text setting is currently in beta, so continuous, fast
  * updates will not work well. On vexOS version 1.0.0 this function will block
