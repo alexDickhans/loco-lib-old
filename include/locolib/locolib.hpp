@@ -18,3 +18,5 @@
 #include "prediction/deadWheel/twoWheelOdometry.hpp"
 #include "sensor/lineSensor/lineSensor.hpp"
 #include "sensor/lineSensor/adiLineSensor.hpp"
+#include "sensor/gps/globalPositioningSystem.hpp"
+#include "sensor/gps/gamePositioningSystem.hpp"

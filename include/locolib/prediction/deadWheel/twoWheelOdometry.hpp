@@ -18,14 +18,18 @@ namespace Loco {
 		std::default_random_engine engine;
 
         Pose2d currentPose;
+
+		Angle angleStd;
     public:
         TwoWheelOdometry(DeadWheel& horizontalWheel,
                          DeadWheel& verticalWheel,
                          OrientationSource& orientationSource,
+						 Angle angleStd,
                          Pose2d startPose = Pose2d()) :
                          horizontalWheel(horizontalWheel),
                          verticalWheel(verticalWheel),
-                         orientationSource(orientationSource) {
+                         orientationSource(orientationSource),
+                         angleStd(angleStd) {
             currentPose = std::move(startPose);
         }
 
@@ -55,7 +59,7 @@ namespace Loco {
 					Eigen::Vector3d({
 						verticalWheel.getDelta().getValue(),
 						horizontalWheel.getDelta().getValue(),
-						0.0});
+						angle.getValue()});
 
 			Eigen::Vector3d odomTickRandomness = {
 					tickRandomness(engine) * verticalWheel.getTickLength().getValue(),
@@ -67,7 +71,7 @@ namespace Loco {
 			Eigen::Vector3d randomSpread = {
 					localTranslation[0] * normalDistribution(engine) * error,
 					localTranslation[1] * normalDistribution(engine) * error,
-					0.0};
+					tickRandomness(engine) * angleStd.getValue()};
 
 			localTranslation = localTranslation + randomSpread;
 
@@ -75,7 +79,7 @@ namespace Loco {
 					Eigen::Matrix3d({
 						{cos(angle), sin(angle), 0.0},
 						{sin(angle), cos(angle), 0.0},
-						{0.0, 0.0, 0.0}}) *
+						{0.0, 0.0, 1.0}}) *
 					localTranslation;
 
 			return globalTranslation;

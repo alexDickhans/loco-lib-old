@@ -12,7 +12,7 @@ auto horizontalWheel = Loco::DeadWheel(1.0_in);
 
 
 auto orientationSource = Loco::InertialOrientationSource(imu);
-auto posePredictor = Loco::TwoWheelOdometry(horizontalWheel, verticalWheel, orientationSource);
+auto posePredictor = Loco::TwoWheelOdometry(horizontalWheel, verticalWheel, orientationSource, (1_deg).Convert(radian));
 
 auto particleFilter = Loco::ParticleFilter<100>(orientationSource, posePredictor);
 
@@ -98,14 +98,13 @@ void opcontrol() {
 
 		Loco::Particle randomParticle = particleFilter.getRandomParticle();
 
-		telemetryRadio.transmit("[" + std::to_string(static_cast<int>((randomParticle.getState().y() * -350.0 / 1.8 + 350))) +"," + std::to_string(
-				static_cast<int>((randomParticle.getState().x() * 350.0 / 1.8 + 350))) + "]\n");
+		telemetryRadio.transmit("[" + std::to_string((randomParticle.getState().y())) + "," + std::to_string(
+				(randomParticle.getState().x())) + "]\n");
 
 //		printf("%s\n", ("[" + std::to_string(static_cast<int>((randomParticle.getState().x() * 350.0 / 1.8 + 350))) +"," + std::to_string(
 //				static_cast<int>((randomParticle.getState().y() * 350.0 / 1.8 + 350))) + "]\n").c_str());
 
-		std::cout << "[" + std::to_string(static_cast<int>((randomParticle.getState().y() * -350.0 / 1.8 + 350))) +"," + std::to_string(
-				static_cast<int>((randomParticle.getState().x() * 350.0 / 1.8 + 350))) + "]\n" << std::endl;
+		std::cout << randomParticle.getState().y() << std::endl;
 
 		pros::delay(10);
 	}
